@@ -67,11 +67,5 @@
         "src": "/(.*)",
         "dest": "index.js"
       }
-    ],
-    "env": {
-      "MONGODB_URI": "@mongodb-uri",
-      "SESSION_SECRET": "@session-secret",
-      "OPENAI_API_KEY": "@openai-api-key",
-      "COINGECKO_API_KEY": "@coingecko-api-key"
-    }
+    ]
   }
