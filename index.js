@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: [
     'http://localhost:5001',  
-    'https://cryptonite-backend.onrender.com'  
+    'https://cryptonite-backend-trial.onrender.com'  
   ],
   credentials: true,
 };
