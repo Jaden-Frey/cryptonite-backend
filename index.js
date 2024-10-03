@@ -24,6 +24,7 @@ const faqQuestions = [
   "Why is circulating supply crucial for a coin’s price?",
   "How do external factors affect a coin's market cap?"
 ];
+
 require('dotenv').config();
 
 const app = express();
@@ -31,7 +32,7 @@ const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://cryptonite-backend.onrender.com'] 
+    ? ['https://cryptonite-backend.vercel.app'] 
     : ['http://localhost:5001'],
   credentials: true,
 };
@@ -55,20 +56,20 @@ const connectDB = async () => {
       return;
     }
 
-    // Retry logic
+    // Create a new connection if none exists
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 10000 
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000 
     });
 
     console.log('MongoDB is connected');
   } catch (err) {
     console.error('Failed to connect to MongoDB:', err.message);
-    process.exit(1); 
+    process.exit(1);
   }
 };
-
 
 
 // User Schema and Model
@@ -404,7 +405,7 @@ app.post('/favourites/remove', isAuthenticated, async (req, res) => {
 app.use('/protected', isAuthenticated, express.static(path.join(__dirname, 'public', 'protected')));
 
 // Serve HTML pages with authentication check
-app.get('/marksum', (req, res) => {
+app.get('/marksum', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'protected', 'marksum.html'));
 });
 
@@ -565,3 +566,5 @@ connectDB().then(async () => {
 }).catch(err => {
   console.error('Failed to connect to MongoDB:', err);
 });
+
+module.exports = app; 
