@@ -20,10 +20,6 @@
         "dest": "index.js"
       },
       {
-        "src": "/favourites",
-        "dest": "index.js"
-      },
-      {
         "src": "/login",
         "dest": "index.js"
       },
@@ -40,12 +36,42 @@
         "dest": "index.js"
       },
       {
+        "src": "/favourites",
+        "dest": "index.js"
+      },
+      {
+        "src": "/marksum",
+        "dest": "index.js"
+      },
+      {
+        "src": "/coins",
+        "dest": "index.js"
+      },
+      {
+        "src": "/faq",
+        "dest": "index.js"
+      },
+      {
         "src": "/setup",
         "dest": "index.js"
       },
       {
-        "src": "/(.*)",
+        "src": "/static/(.*)",
+        "dest": "/public/static/$1"
+      },
+      {
+        "src": "/(.*)\\.(?:jpg|jpeg|gif|png|svg|ico|css|js)$",
         "dest": "/public/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "index.js"
       }
-    ]
+    ],
+    "env": {
+      "MONGODB_URI": "@mongodb-uri",
+      "SESSION_SECRET": "@session-secret",
+      "OPENAI_API_KEY": "@openai-api-key",
+      "COINGECKO_API_KEY": "@coingecko-api-key"
+    }
   }
