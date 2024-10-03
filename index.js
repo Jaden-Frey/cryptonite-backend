@@ -31,7 +31,7 @@ const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://cryptonite-backend.vercel.app/'] 
+    ? ['https://cryptonite-backend-deploy.vercel.app/'] 
     : ['http://localhost:5001'],
   credentials: true,
 };
