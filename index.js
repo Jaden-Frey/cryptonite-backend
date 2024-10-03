@@ -31,7 +31,7 @@ const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://cryptonite-backend.vercel.app/'] 
+    ? ['https://cryptonite-backend-trial.onrender.com'] 
     : ['http://localhost:5001'],
   credentials: true,
 };
@@ -565,5 +565,3 @@ connectDB().then(async () => {
 }).catch(err => {
   console.error('Failed to connect to MongoDB:', err);
 });
-
-module.exports = app;
