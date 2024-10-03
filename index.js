@@ -31,7 +31,7 @@ const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://cryptonite-backend.vercel.app/'] 
+    ? ['https://cryptonite-backend.onrender.com'] 
     : ['http://localhost:5001'],
   credentials: true,
 };
@@ -55,20 +55,20 @@ const connectDB = async () => {
       return;
     }
 
-    // Create a new connection if none exists
+    // Retry logic
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 5000 
+      serverSelectionTimeoutMS: 10000 
     });
 
     console.log('MongoDB is connected');
   } catch (err) {
     console.error('Failed to connect to MongoDB:', err.message);
-    process.exit(1);
+    process.exit(1); 
   }
 };
+
 
 
 // User Schema and Model
@@ -565,5 +565,3 @@ connectDB().then(async () => {
 }).catch(err => {
   console.error('Failed to connect to MongoDB:', err);
 });
-
-module.exports = app;
