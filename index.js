@@ -30,10 +30,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: [
-    'http://localhost:5001',  
-    'https://cryptonite-backend-trial.onrender.com'  
-  ],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://cryptonite-backend.vercel.app/'] 
+    : ['http://localhost:5001'],
   credentials: true,
 };
 
@@ -51,16 +50,26 @@ app.use(express.json());
 // Define connectDB function
 const connectDB = async () => {
   try {
+    if (mongoose.connections[0].readyState) {
+      console.log('MongoDB is already connected');
+      return;
+    }
+
+    // Create a new connection if none exists
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000 
     });
+
     console.log('MongoDB is connected');
   } catch (err) {
-    console.error('Failed to connect to my MongoDB:', err);
+    console.error('Failed to connect to MongoDB:', err.message);
     process.exit(1);
   }
 };
+
 
 // User Schema and Model
 const UserSchema = new mongoose.Schema({
@@ -89,18 +98,19 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Setup session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET || "verygoodsecret",
+  secret: process.env.SESSION_SECRET || 'verygoodsecret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    collectionName: 'sessions',
-    ttl: 24 * 60 * 60, 
-  }),
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24,
-    secure: process.env.NODE_ENV === 'production'
-  }
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    httpOnly: true 
+  },
+  store: MongoStore.create({ 
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions'
+  })
 }));
 
 // Passport.js
@@ -555,3 +565,5 @@ connectDB().then(async () => {
 }).catch(err => {
   console.error('Failed to connect to MongoDB:', err);
 });
+
+module.exports = app;
